@@ -3,28 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AvatarFX | Transform Roblox Avatars into Stunning GFX</title>
+    <title>AvatarFX | Premium Roblox Avatar to GFX Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #ffffff;
             --secondary: #000000;
             --accent: #00ffff;
+            --accent-dark: #00b7b7;
             --glow: 0 0 15px rgba(0, 255, 255, 0.7);
+            --glow-intense: 0 0 25px rgba(0, 255, 255, 0.9);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecg.woff2) format('woff2');
+        }
+        
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 600;
+            src: url(https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2) format('woff2');
+        }
+        
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 700;
+            src: url(https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2) format('woff2');
         }
         
         body {
             background-color: var(--secondary);
             color: var(--primary);
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid rgba(0, 255, 255, 0.2);
+            border-bottom-color: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Navigation */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -34,8 +91,16 @@
             width: 100%;
             z-index: 100;
             background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .navbar.scrolled {
+            padding: 15px 50px;
+            background-color: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
         .logo {
@@ -46,6 +111,11 @@
             background-clip: text;
             color: transparent;
             text-shadow: var(--glow);
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            text-shadow: var(--glow-intense);
         }
         
         .nav-links {
@@ -57,8 +127,9 @@
             color: var(--primary);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
+            font-size: 17px;
         }
         
         .nav-links a:hover {
@@ -74,13 +145,14 @@
             bottom: -5px;
             left: 0;
             background-color: var(--accent);
-            transition: width 0.3s ease;
+            transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         
         .nav-links a:hover::after {
             width: 100%;
         }
         
+        /* Hero Section */
         .hero {
             height: 100vh;
             display: flex;
@@ -112,6 +184,7 @@
             background-clip: text;
             color: transparent;
             text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            line-height: 1.2;
         }
         
         .hero p {
@@ -119,10 +192,11 @@
             max-width: 700px;
             margin-bottom: 40px;
             opacity: 0.9;
+            line-height: 1.6;
         }
         
         .cta-button {
-            padding: 15px 40px;
+            padding: 18px 50px;
             background: transparent;
             color: var(--accent);
             border: 2px solid var(--accent);
@@ -130,21 +204,52 @@
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: var(--glow);
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(45deg, var(--accent), var(--accent-dark));
+            transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: -1;
         }
         
         .cta-button:hover {
-            background-color: var(--accent);
             color: var(--secondary);
             box-shadow: 0 0 25px var(--accent);
             transform: translateY(-3px);
         }
         
+        .cta-button:hover::before {
+            width: 100%;
+        }
+        
+        /* Gallery Section */
         .features {
-            padding: 100px 50px;
+            padding: 150px 50px 100px;
             background-color: rgba(10, 10, 10, 0.7);
+            position: relative;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 1), transparent);
+            z-index: 1;
         }
         
         .section-title {
@@ -152,6 +257,7 @@
             font-size: 48px;
             margin-bottom: 70px;
             position: relative;
+            line-height: 1.2;
         }
         
         .section-title::after {
@@ -163,6 +269,12 @@
             bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
+            animation: glowPulse 2s infinite alternate;
+        }
+        
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px var(--accent); }
+            100% { box-shadow: 0 0 15px var(--accent); }
         }
         
         .gallery {
@@ -174,10 +286,11 @@
         
         .gallery-item {
             position: relative;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            aspect-ratio: 1/1;
         }
         
         .gallery-item:hover {
@@ -189,7 +302,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .gallery-item:hover img {
@@ -204,12 +317,19 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .gallery-item:hover::after {
+            opacity: 1;
         }
         
         /* Before & After Section */
         .comparison-section {
             padding: 100px 50px;
             background-color: rgba(15, 15, 15, 0.8);
+            position: relative;
         }
         
         .comparison-container {
@@ -235,20 +355,26 @@
             margin-bottom: 20px;
             color: var(--accent);
             text-align: center;
+            font-weight: 600;
         }
         
         .comparison-images {
             display: flex;
             width: 100%;
             position: relative;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            transition: all 0.4s ease;
+        }
+        
+        .comparison-images:hover {
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.3);
         }
         
         .before-image, .after-image {
             width: 50%;
-            transition: all 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .before-image {
@@ -258,6 +384,7 @@
         .comparison-images:hover .before-image {
             transform: scale(0.95);
             opacity: 0.8;
+            filter: grayscale(30%);
         }
         
         .comparison-images:hover .after-image {
@@ -271,64 +398,140 @@
             transform: translate(-50%, -50%);
             font-size: 40px;
             color: var(--accent);
-            text-shadow: var(--glow);
+            text-shadow: var(--glow-intense);
             z-index: 2;
+            transition: all 0.4s ease;
         }
         
+        .comparison-images:hover .arrow-icon {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        
+        /* Download Section */
         .download-section {
-            padding: 100px 50px;
+            padding: 150px 50px;
             text-align: center;
             background: linear-gradient(to bottom, rgba(10, 10, 10, 0.7), var(--secondary));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 1), transparent);
+            z-index: 1;
         }
         
         .download-container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 50px;
+            padding: 60px;
             background-color: rgba(20, 20, 20, 0.8);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+        
+        .download-container:hover {
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .download-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(0, 255, 255, 0.1) 0%,
+                rgba(0, 255, 255, 0) 60%
+            );
+            transform: rotate(30deg);
+            z-index: -1;
         }
         
         .download-title {
             font-size: 36px;
             margin-bottom: 30px;
             color: var(--accent);
+            line-height: 1.2;
         }
         
         .download-description {
             font-size: 18px;
             margin-bottom: 40px;
             opacity: 0.9;
+            line-height: 1.6;
         }
         
         .download-button {
-            padding: 18px 50px;
-            background: linear-gradient(45deg, var(--accent), #0088ff);
+            padding: 20px 60px;
+            background: linear-gradient(45deg, var(--accent), var(--accent-dark));
             color: var(--secondary);
             border: none;
             border-radius: 50px;
             font-size: 20px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.3, 1);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
             text-decoration: none;
             display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .download-button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.7);
-            background: linear-gradient(45deg, #00ffff, #00a2ff);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.8);
         }
         
+        .download-button:hover::before {
+            left: 100%;
+        }
+        
+        .download-info {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        /* Footer */
         footer {
-            padding: 50px;
+            padding: 80px 50px 50px;
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
         }
         
         .footer-logo {
@@ -339,6 +542,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            display: inline-block;
         }
         
         .footer-links {
@@ -346,22 +550,97 @@
             justify-content: center;
             gap: 30px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
         
         .footer-links a {
             color: var(--primary);
             text-decoration: none;
             transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
         }
         
         .footer-links a:hover {
             color: var(--accent);
+        }
+        
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .social-links a {
+            color: var(--primary);
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
             text-shadow: var(--glow);
         }
         
         .copyright {
             opacity: 0.7;
             font-size: 14px;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 10, 10, 0.8);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-dark);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 60px;
+            }
+            
+            .section-title {
+                font-size: 42px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 768px) {
@@ -382,7 +661,7 @@
             }
             
             .features, .comparison-section {
-                padding: 50px 20px;
+                padding: 100px 20px 50px;
             }
             
             .section-title {
@@ -390,10 +669,6 @@
             }
             
             .gallery {
-                grid-template-columns: 1fr;
-            }
-            
-            .comparison-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -415,11 +690,20 @@
             }
             
             .download-section {
-                padding: 50px 20px;
+                padding: 100px 20px;
             }
             
             .download-container {
                 padding: 30px 20px;
+            }
+            
+            .download-title {
+                font-size: 30px;
+            }
+            
+            .download-button {
+                padding: 16px 40px;
+                font-size: 18px;
             }
         }
         
@@ -437,8 +721,8 @@
         
         .slide-up {
             opacity: 0;
-            transform: translateY(50px);
-            animation: slideUp 1s ease forwards;
+            transform: translateY(30px);
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         
         @keyframes slideUp {
@@ -463,9 +747,54 @@
         .delay-4 {
             animation-delay: 0.8s;
         }
+        
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">AvatarFX</div>
         <div class="nav-links">
@@ -476,15 +805,17 @@
         </div>
     </nav>
     
+    <!-- Hero Section -->
     <section class="hero" id="home">
         <h1 class="fade-in">Transform Your Roblox Avatar</h1>
         <p class="fade-in delay-1">Turn your ordinary Roblox character into stunning high-quality GFX artwork with our advanced conversion technology. Perfect for profile pictures, thumbnails, and social media.</p>
         <a href="#download" class="cta-button fade-in delay-2">Get Started</a>
     </section>
     
+    <!-- Gallery Section -->
     <section class="features" id="gallery">
         <h2 class="section-title slide-up">Gallery</h2>
-        <p class="slide-up delay-1" style="text-align: center; max-width: 800px; margin: 0 auto 50px;">Check out some examples of avatars transformed with AvatarFX. Click to enlarge.</p>
+        <p class="slide-up delay-1" style="text-align: center; max-width: 800px; margin: 0 auto 50px;">Check out some examples of avatars transformed with AvatarFX. Hover to see details.</p>
         
         <div class="gallery">
             <!-- First Row -->
@@ -523,6 +854,7 @@
         </div>
     </section>
     
+    <!-- Before & After Section -->
     <section class="comparison-section" id="comparison">
         <h2 class="section-title slide-up">Before & After</h2>
         <p class="slide-up delay-1" style="text-align: center; max-width: 800px; margin: 0 auto 50px;">See the incredible transformations from ordinary Roblox avatars to stunning GFX artwork.</p>
@@ -532,7 +864,7 @@
                 <div class="comparison-item slide-up">
                     <h3 class="comparison-title">Bacon Hair Transformation</h3>
                     <div class="comparison-images">
-                        <img class="before-image" src="https://static.wikia.nocookie.net/roblox-outfit-styles/images/a/a1/Bacon.webp/revision/latest/scale-to-width/360?cb=20240804193322" alt="Before: Bacon Hair Avatar">
+                        <img class="before-image" src="https://tr.rbxcdn.com/30DAY-Avatar-0F2A90DED6D7165487001D96ECAE08D1-Png/352/352/Avatar/Webp/noFilter">
                         <div class="arrow-icon">→</div>
                         <img class="after-image" src="https://i.pinimg.com/736x/d5/1a/5b/d51a5b365510aff61e343b0af94ab2a3.jpg" alt="After: GFX Version">
                     </div>
@@ -541,7 +873,7 @@
                 <div class="comparison-item slide-up delay-1">
                     <h3 class="comparison-title">Bacon Hair Transformation</h3>
                     <div class="comparison-images">
-                        <img class="before-image" src="https://i.redd.it/what-are-your-thoughts-on-bacon-hairs-acorn-hairs-v0-049drme0o6jd1.jpg?width=420&format=pjpg&auto=webp&s=186b2e3a17f6cee229aa996cd11494e13af34ce2" alt="Before: Acorn Hair Avatar">
+                        <img class="before-image" src="https://tr.rbxcdn.com/30DAY-Avatar-4A19286D4D59BF7E8A3D7DA7E4D55240-Png/352/352/Avatar/Webp/noFilter">
                         <div class="arrow-icon">→</div>
                         <img class="after-image" src="https://i.pinimg.com/564x/1b/4b/80/1b4b802783ab521c78812bd759cb6e31.jpg" alt="After: GFX Version">
                     </div>
@@ -550,15 +882,20 @@
         </div>
     </section>
     
+    <!-- Download Section -->
     <section class="download-section" id="download">
         <div class="download-container slide-up">
             <h2 class="download-title">Download AvatarFX Now</h2>
             <p class="download-description">Available for Windows and macOS. Transform your Roblox avatar in just a few clicks with our intuitive application.</p>
-            <a href="#" class="download-button">Download for Free</a>
-            <p style="margin-top: 20px; font-size: 14px; opacity: 0.7;">Version 1.0.0 | 25MB</p>
+            
+            <a href="https://raw.githubusercontent.com/souhailprohacker/souhailprohacker.github.io/main/gfxmaker.exe" download class="download-button">
+                Download GFX Maker
+            </a>
+            <p class="download-info">Version 1.0.0 | 25MB | Windows 10/11</p>
         </div>
     </section>
     
+    <!-- Footer -->
     <footer>
         <div class="footer-logo">AvatarFX</div>
         <div class="footer-links">
@@ -567,11 +904,85 @@
             <a href="#">Support</a>
             <a href="#">Contact Us</a>
         </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
         <p class="copyright">© 2023 AvatarFX. All rights reserved. Not affiliated with Roblox Corporation.</p>
     </footer>
     
     <script>
-        // Simple animation trigger on scroll
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 1px and 3px
+                const size = Math.random() * 2 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = `-10px`;
+                
+                // Random animation duration between 10s and 20s
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
         document.addEventListener('DOMContentLoaded', function() {
             const animatedElements = document.querySelectorAll('.slide-up, .fade-in');
             
@@ -582,20 +993,13 @@
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { 
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
             
             animatedElements.forEach(element => {
                 observer.observe(element);
-            });
-            
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
             });
         });
     </script>
