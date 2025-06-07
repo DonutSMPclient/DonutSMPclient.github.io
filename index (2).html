@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donut SMP Auto Farm | Ultimate Farming Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --donut-pink: #ff6b8b;
+            --donut-brown: #8b4513;
+            --donut-sprinkle: #ffd700;
+            --donut-dark: #1a0a00;
+        }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--donut-dark);
+            color: white;
+            overflow-x: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/cartographer.png');
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        .donut-bg {
+            background: radial-gradient(circle at 20% 50%, var(--donut-pink), var(--donut-dark));
+        }
+        .donut-card {
+            background: rgba(26, 10, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(255, 107, 0, 0.2);
+        }
+        .donut-btn {
+            background: linear-gradient(135deg, var(--donut-pink), #ff8c9c);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .donut-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.4);
+        }
+        .donut-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            transition: all 0.3s;
+        }
+        .donut-btn:hover::after {
+            left: 100%;
+        }
+        .module-item {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        .module-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--donut-pink);
+            font-weight: bold;
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(255, 107, 0, 0.7);
+        }
+        .showcase-img {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+        .sprinkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        .sprinkle-1 { background: #ffd700; top: 10%; left: 15%; }
+        .sprinkle-2 { background: #ff6b8b; top: 25%; right: 20%; }
+        .sprinkle-3 { background: #4caf50; bottom: 30%; left: 10%; }
+        .sprinkle-4 { background: #2196f3; bottom: 15%; right: 25%; }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(139, 69, 19, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .farm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .farm-item {
+            background: rgba(26, 10, 0, 0.5);
+            border: 1px solid rgba(255, 107, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .farm-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="donut-bg bg-cover bg-fixed">
+    <!-- Animated Particles -->
+    <div class="fixed inset-0 -z-10 opacity-20">
+        <div class="sprinkle sprinkle-1 animate-bounce" style="animation-delay: 0.1s;"></div>
+        <div class="sprinkle sprinkle-2 animate-bounce" style="animation-delay: 0.4s;"></div>
+        <div class="sprinkle sprinkle-3 animate-bounce" style="animation-delay: 0.7s;"></div>
+        <div class="sprinkle sprinkle-4 animate-bounce" style="animation-delay: 1.0s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="container mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center border-b border-orange-900/50">
+        <div class="flex items-center mb-4 md:mb-0">
+            <img src="https://website.donutsmp.org/logo.png" alt="Donut SMP Logo" class="h-12 mr-3">
+            <h1 class="text-2xl font-orbitron">
+                <span class="text-[#ff6b8b]">DONUT SMP</span> 
+                <span class="text-white">AUTO FARM</span>
+            </h1>
+        </div>
+        <nav class="hidden md:flex space-x-8 mb-4 md:mb-0">
+            <a href="#features" class="text-[#ffd700] hover:text-white transition font-semibold">FEATURES</a>
+            <a href="#how-it-works" class="text-[#ffd700] hover:text-white transition font-semibold">HOW IT WORKS</a>
+            <a href="#download" class="text-[#ffd700] hover:text-white transition font-semibold">DOWNLOAD</a>
+            <a href="#" class="text-[#ffd700] hover:text-white transition font-semibold">DISCORD</a>
+        </nav>
+        <a href="#download" class="donut-btn px-6 py-2 rounded font-semibold text-white">
+            GET AUTO FARM
+        </a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-10 md:py-20 mt-5">
+        <div class="flex flex-col lg:flex-row items-center">
+            <div class="lg:w-1/2 mb-16 lg:mb-0" data-aos="fade-right">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight font-orbitron">
+                    <span class="text-[#ff6b8b] glow-text">AUTOMATE</span><br>
+                    <span class="text-white">YOUR FARMING</span>
+                </h2>
+                <p class="text-lg text-[#ffd700] mb-10 max-w-lg">
+                    The ultimate farming solution for Donut SMP with intelligent automation, 
+                    crop optimization, and resource management.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="https://raw.githubusercontent.com/cheetoclientv2/cheetoclientv2.github.io/main/autofarm.jar" class="donut-btn px-8 py-3 rounded font-semibold text-white text-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        DOWNLOAD NOW
+                    </a>
+                    <a href="#features" class="px-8 py-3 rounded font-semibold text-white text-lg border border-[#ff6b8b] hover:bg-[#ff6b8b]/30 transition text-center">
+                        VIEW FEATURES
+                    </a>
+                </div>
+                <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <div class="flex items-center">
+                        <div class="flex -space-x-2">
+                            <div class="w-8 h-8 rounded-full bg-[#ff6b8b] border-2 border-[#ffd700]"></div>
+                            <div class="w-8 h-8 rounded-full bg-[#8b4513] border-2 border-[#ffd700]"></div>
+                            <div class="w-8 h-8 rounded-full bg-[#ffd700] border-2 border-[#ffd700]"></div>
+                        </div>
+                        <span class="ml-3 text-sm text-[#ffd700]">+100 ACTIVE USERS</span>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                        <span class="text-[#ffd700]">SMP APPROVED</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2" data-aos="fade-left">
+                <div class="relative">
+                    <div class="donut-card rounded-xl overflow-hidden border border-[#ff6b8b]/30">
+                        <img src="https://github.com/cheetoclientv2/cheetoclientv2.github.io/blob/main/6f638640-aab7-44e8-90ff-3a685ac3e067.png?raw=true" alt="Donut SMP Auto Farm Showcase" class="showcase-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container mx-auto px-6 py-16">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 font-orbitron">
+                <span class="text-[#ff6b8b]">POWERFUL</span> 
+                <span class="text-white">FARMING FEATURES</span>
+            </h2>
+            <p class="text-lg text-[#ffd700] max-w-2xl mx-auto">
+                Advanced automation tools designed specifically for Donut SMP
+            </p>
+        </div>
+
+        <div class="farm-grid">
+            <div class="farm-item" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-icon mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#ffd700]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-[#ff6b8b]">Crop Automation</h3>
+                <p class="text-white">Automatically plants, harvests, and replants wheat, carrots, potatoes, and more</p>
+            </div>
+            
+            <div class="farm-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-icon mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#ffd700]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-[#ff6b8b]">Tree Farm</h3>
+                <p class="text-white">Fully automated tree farming with sapling replanting</p>
+            </div>
+            
+            <div class="farm-item" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-icon mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#ffd700]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-[#ff6b8b]">Animal Husbandry</h3>
+                <p class="text-white">Auto breeding, feeding, and collection of animal products</p>
+            </div>
+            
+            <div class="farm-item" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-icon mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#ffd700]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-[#ff6b8b]">Resource Management</h3>
+                <p class="text-white">Smart sorting and storage of farm products</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="container mx-auto px-6 py-16">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 font-orbitron">
+                <span class="text-[#ff6b8b]">HOW THE</span> 
+                <span class="text-white">AUTO FARM WORKS</span>
+            </h2>
+            <p class="text-lg text-[#ffd700] max-w-2xl mx-auto">
+                Simple setup for maximum farming efficiency
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="donut-card rounded-xl p-8" data-aos="fade-right">
+                <h3 class="text-2xl font-bold mb-6 text-[#ff6b8b] font-orbitron">SETUP PROCESS</h3>
+                <div class="space-y-6">
+                    <div class="module-item text-white">
+                        <span class="font-semibold">1. Download</span> - Get the Auto Farm mod
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">2. Install</span> - Place in your Minecraft mods folder
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">3. Configure</span> - Set up your farm parameters
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">4. Activate</span> - Start the automation process
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">5. Monitor</span> - Check resource collection and efficiency
+                    </div>
+                </div>
+            </div>
+
+            <div class="donut-card rounded-xl p-8" data-aos="fade-left">
+                <h3 class="text-2xl font-bold mb-6 text-[#ff6b8b] font-orbitron">ADVANTAGES</h3>
+                <div class="space-y-6">
+                    <div class="module-item text-white">
+                        <span class="font-semibold">24/7 Operation</span> - Farm works even when you're offline
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">Resource Efficient</span> - Optimizes seed and sapling usage
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">SMP Safe</span> - Designed specifically for Donut SMP
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">Easy Configuration</span> - Simple GUI for all settings
+                    </div>
+                    <div class="module-item text-white">
+                        <span class="font-semibold">Performance Friendly</span> - Low impact on server resources
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="container mx-auto px-6 py-16">
+        <div class="donut-card rounded-2xl p-8 md:p-12 text-center" data-aos="zoom-in">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 font-orbitron">
+                <span class="text-[#ff6b8b] glow-text">DOWNLOAD</span> AUTO FARM
+            </h2>
+            <p class="text-xl text-[#ffd700] max-w-2xl mx-auto mb-10">
+                Join hundreds of Donut SMP players automating their farms
+            </p>
+            <a href="https://raw.githubusercontent.com/cheetoclientv2/cheetoclientv2.github.io/main/autofarm.jar" class="donut-btn inline-block px-8 py-3 md:px-12 md:py-4 rounded font-semibold text-white text-lg mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                DOWNLOAD NOW
+            </a>
+            <div class="mt-6 text-sm text-[#ff6b8b]">
+                MINECRAFT MOD
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-orange-900/50 py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-6 md:mb-0">
+                    <img src="https://website.donutsmp.org/logo.png" alt="Donut SMP Logo" class="h-8 mr-3">
+                    <div class="text-xl font-orbitron">
+                        <span class="text-[#ff6b8b]">DONUT SMP</span>
+                        <span class="text-white">AUTO FARM</span>
+                    </div>
+                </div>
+                <div class="flex space-x-6 mb-6 md:mb-0">
+                    <a href="#" class="text-[#ffd700] hover:text-white transition">PRIVACY</a>
+                    <a href="#" class="text-[#ffd700] hover:text-white transition">TERMS</a>
+                    <a href="#" class="text-[#ffd700] hover:text-white transition">DISCORD</a>
+                    <a href="#" class="text-[#ffd700] hover:text-white transition">SUPPORT</a>
+                </div>
+                <div class="text-sm text-[#ffd700]/80 text-center md:text-right">
+                    © 2023 DONUT SMP AUTO FARM. Not affiliated with Mojang or Microsoft.<br>
+                    Designed exclusively for the Donut SMP community.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+</body>
+</html>
